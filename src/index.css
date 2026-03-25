@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-green: #2ECC71;
+  --color-brand-blue: #1F3A93;
+  --color-brand-blue-hover: #152A6D;
+}
+
+/* --- AÑADE ESTO AQUÍ --- */
+@custom-variant dark (&:where(.dark, .dark *));
