@@ -1,26 +1,39 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Plans from './components/Plans';     // <--- Nuevo
-import About from './components/About';
-import Support from './components/Support'; // <--- Nuevo
-import Documents from './components/Documents';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Plans from "./components/Plans";
+import Documents from "./components/Documents";
+import Support from "./components/Support";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 font-sans antialiased transition-colors duration-500">
-      <Navbar />
-      <main>
-        <Hero />
-        <Plans />
-        <About />
-        <Support />
-        <Documents />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="min-h-screen">
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <About />
+                <Plans />
+                <Support />
+                <Contact />
+              </>
+            }
+          />
+          <Route path="/sobre-nosotros" element={<About />} />
+          <Route path="/planes" element={<Plans />} />
+          <Route path="/documentos" element={<Documents />} />
+          <Route path="/contacto" element={<Contact />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

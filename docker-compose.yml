@@ -1,0 +1,15 @@
+services:
+  web-Telcomfib:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-Telcomfib
+    ports:
+      - "80:80"
+    networks:
+      - webTelcomfib
+    restart: always
+
+networks:
+  webTelcomfib:
+    driver: bridge
