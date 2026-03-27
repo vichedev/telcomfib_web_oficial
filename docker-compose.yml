@@ -1,15 +1,18 @@
 services:
-  web-Telcomfib:
+  # Cambia 'web-Telcomfib' por 'web-telcomfib' (minúsculas)
+  web-telcomfib: 
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: web-Telcomfib
+    # El nombre de la imagen DEBE ser en minúsculas
+    image: telcomfib-web:latest 
+    container_name: web-telcomfib
     ports:
       - "80:80"
     networks:
-      - webTelcomfib
+      - webtelcomfib
     restart: always
 
 networks:
-  webTelcomfib:
+  webtelcomfib:
     driver: bridge
