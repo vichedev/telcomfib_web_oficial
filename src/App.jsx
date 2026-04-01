@@ -7,8 +7,8 @@ import Documents from "./components/Documents";
 import Support from "./components/Support";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import ParametrosCalidad from "./components/ParametrosCalidad";
-import TarifarioPromociones from "./components/TarifarioPromociones";
+import ParametrosCalidad from "./components/Parametroscalidad";
+import TarifarioPromociones from "./components/Tarifariopromociones";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
