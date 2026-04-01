@@ -158,10 +158,6 @@ const Footer = () => {
                   url: getDocumentUrl(3),
                 },
                 {
-                  name: "Parámetros de Calidad",
-                  url: getDocumentUrl(5),
-                },
-                {
                   name: "Servicios de Valor Agregado",
                   url: getDocumentUrl(8),
                 },
@@ -229,11 +225,6 @@ const Footer = () => {
                   name: "Consejos de Seguridad",
                   url: getDocumentUrl(13),
                   icon: FaShieldAlt,
-                },
-                {
-                  name: "Parámetros de Calidad",
-                  url: getDocumentUrl(5),
-                  icon: FaStar,
                 },
                 {
                   name: "Terminologías Técnicas",
@@ -310,6 +301,14 @@ const Footer = () => {
                 { name: "Planes", url: "/planes" },
                 { name: "Sobre Nosotros", url: "/sobre-nosotros" },
                 { name: "Documentos", url: "/documentos" },
+                {
+                  name: "Parámetros de Calidad",
+                  url: "/parametros-de-calidad",
+                },
+                {
+                  name: "Tarifario y Promociones",
+                  url: "/tarifario-y-promociones",
+                },
                 { name: "Contacto", url: "/contacto" },
               ].map((item, index) => (
                 <li key={index}>

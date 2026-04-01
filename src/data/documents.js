@@ -35,9 +35,9 @@ const documentosData = [
   {
     id: 5,
     imageUrl: "/Documents/img_icon/icon_docu.png",
-    title: "Parámetros de Calidad RutaNet",
-    description: "Parámetros de calidad establecidos por RutaNet",
-    pdfUrl: "/Documents/5PARAMETROS DE CALIDAD_RutaNetSA.pdf",
+    title: "Parámetros de Calidad Telcomfib",
+    description: "Parámetros de calidad establecidos por Telcomfib",
+    pdfUrl: "/Documents/5Telcomfib_Parametros_Calidad_2025.pdf",
   },
   {
     id: 6,
