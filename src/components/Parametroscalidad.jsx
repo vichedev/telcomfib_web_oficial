@@ -42,7 +42,7 @@ const features = [
 
 const IMAGE_SRC = "/Arcotel/calidad_banner.png";
 const IMAGE_ALT = "Parámetros de Calidad — Telcomfib";
-const PDF_URL = "/Documents/Telcomfib_Parametros_Calidad_2025.pdf";
+const PDF_URL = "/Documents/5Telcomfib_Parametros_Calidad_2025.pdf";
 const PDF_NAME = "Telcomfib_Parametros_Calidad_2025.pdf";
 
 // ── Lightbox ─────────────────────────────────────────────────────────────────
