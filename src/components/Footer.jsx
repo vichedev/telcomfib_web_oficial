@@ -47,6 +47,7 @@ const Footer = () => {
     14: "14control parental 2.pdf",
     15: "15propuesta_335-normativa_reforma_norma_condiciones_generales-contratos adhesion.pdf",
     16: "16Saturacion.pdf",
+    17: "17Resolucion_Arcotel-2026-0027_ACTUALIZACION_LOPAM.pdf",
   };
 
   const getDocumentUrl = (id) => `/Documents/${documentosPaths[id]}`;
@@ -239,6 +240,11 @@ const Footer = () => {
                 {
                   name: "Saturación de Red",
                   url: getDocumentUrl(16),
+                  icon: FaBroadcastTower,
+                },
+                {
+                  name: "Resolucion 2026 LOPAM",
+                  url: getDocumentUrl(17),
                   icon: FaBroadcastTower,
                 },
               ].map((item, index) => {

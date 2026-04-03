@@ -1,9 +1,49 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
+// Función robusta para copiar al portapapeles (funciona con y sin SSL)
+const copyToClipboard = async (text) => {
+  // Método 1: API moderna (requiere HTTPS)
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // fallback
+    }
+  }
+  // Método 2: execCommand (funciona en HTTP también)
+  try {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "-9999px";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const success = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return success;
+  } catch {
+    return false;
+  }
+};
+
 // Modal Component para los bancos
 const BankModal = ({ bank, isOpen, onClose }) => {
+  const [copied, setCopied] = useState(false);
+
   if (!isOpen || !bank) return null;
+
+  const handleCopy = async () => {
+    const success = await copyToClipboard(bank.account);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -25,7 +65,6 @@ const BankModal = ({ bank, isOpen, onClose }) => {
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 dark:from-slate-800 dark:to-slate-900 p-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center">
-                {/* Logo real del banco en el modal */}
                 <img
                   src={bank.logo}
                   alt={bank.name}
@@ -50,26 +89,48 @@ const BankModal = ({ bank, isOpen, onClose }) => {
                   {bank.account}
                 </p>
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(bank.account);
-                    alert("✅ ¡Cuenta copiada al portapapeles!");
-                  }}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-medium transition-all duration-200 flex items-center gap-1"
+                  onClick={handleCopy}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
+                    copied
+                      ? "bg-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                      : "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                  }`}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Copiar
+                  {copied ? (
+                    <>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      ¡Copiado!
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Copiar
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -110,8 +171,8 @@ const BankModal = ({ bank, isOpen, onClose }) => {
                   />
                 </svg>
                 <p className="text-sm text-emerald-800 dark:text-emerald-300">
-                  Una vez realizado el depósito, envía el comprobante por
-                  WhatsApp para activar tu servicio
+                  Una vez realizado el depósito, toma una foto al comprobante y
+                  envíala por WhatsApp para activar tu servicio
                 </p>
               </div>
             </div>
@@ -149,7 +210,6 @@ const ImageModal = ({ image, title, isOpen, onClose }) => {
           className="relative max-w-5xl w-full"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Botón cerrar */}
           <button
             onClick={onClose}
             className="absolute -top-12 right-0 text-white hover:text-emerald-400 transition-colors z-10"
@@ -169,15 +229,12 @@ const ImageModal = ({ image, title, isOpen, onClose }) => {
             </svg>
           </button>
 
-          {/* Imagen */}
           <div className="relative rounded-2xl overflow-hidden bg-black/50">
             <img
               src={image}
               alt={title}
               className="w-full h-auto max-h-[85vh] object-contain"
             />
-
-            {/* Título flotante */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
               <h3 className="text-2xl font-bold text-white text-center">
                 {title}
@@ -206,7 +263,7 @@ const Plans = () => {
       name: "Plan Básico",
       speed: "400",
       speedUnit: "MEGAS",
-      price: "18.04",
+      basePrice: "18.04",
       finalPrice: "20.75",
       image: "/Planes/400megas.png",
       bgColor: "from-blue-500 to-cyan-500",
@@ -223,7 +280,7 @@ const Plans = () => {
       name: "Plan Medio",
       speed: "500",
       speedUnit: "MEGAS",
-      price: "21.30",
+      basePrice: "21.30",
       finalPrice: "24.50",
       image: "/Planes/500megas.png",
       bgColor: "from-emerald-500 to-teal-500",
@@ -241,7 +298,7 @@ const Plans = () => {
       name: "Plan Avanzado",
       speed: "600",
       speedUnit: "MEGAS",
-      price: "26.52",
+      basePrice: "26.52",
       finalPrice: "30.50",
       image: "/Planes/600megas.png",
       bgColor: "from-purple-500 to-pink-500",
@@ -258,7 +315,7 @@ const Plans = () => {
       name: "Plan Extreme",
       speed: "700",
       speedUnit: "MEGAS",
-      price: "30.26",
+      basePrice: "30.26",
       finalPrice: "34.80",
       image: "/Planes/700megas.png",
       bgColor: "from-orange-500 to-red-500",
@@ -275,7 +332,7 @@ const Plans = () => {
       name: "Plan Turbo",
       speed: "1",
       speedUnit: "GIGA",
-      price: "40.00",
+      basePrice: "40.00",
       finalPrice: "46.00",
       image: "/Planes/1giga.png",
       bgColor: "from-amber-500 to-yellow-500",
@@ -291,43 +348,8 @@ const Plans = () => {
     },
   ];
 
+  // Cuentas bancarias corregidas según los datos proporcionados
   const banks = [
-    {
-      name: "Banco Pichincha",
-      type: "Cuenta Corriente",
-      account: "2100279425",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
-      logo: "/Bancos/Pichincha.png",
-      color: "from-yellow-400 to-yellow-600",
-    },
-    {
-      name: "Banco Pichincha",
-      type: "Cuenta Ahorros",
-      account: "2203373811",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
-      logo: "/Bancos/Pichincha.png",
-      color: "from-yellow-400 to-yellow-600",
-    },
-    {
-      name: "Banco Guayaquil",
-      type: "Cuenta Corriente",
-      account: "2100279425",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
-      logo: "/Bancos/Guayaquil.png",
-      color: "from-pink-500 to-red-600",
-    },
-    {
-      name: "Banco Guayaquil",
-      type: "Cuenta Ahorros",
-      account: "2203373811",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
-      logo: "/Bancos/Guayaquil.png",
-      color: "from-pink-500 to-red-600",
-    },
     {
       name: "Banco Bolivariano",
       type: "Cuenta Corriente",
@@ -347,20 +369,51 @@ const Plans = () => {
       color: "from-teal-600 to-blue-700",
     },
     {
+      name: "Banco Pichincha",
+      type: "Cuenta Ahorros",
+      account: "2203373811",
+      owner: "Frutos González Israel Oswaldo",
+      logo: "/Bancos/Pichincha.png",
+      color: "from-yellow-400 to-yellow-600",
+    },
+    {
+      name: "Banco Pichincha",
+      type: "Cuenta Corriente",
+      account: "2100279425",
+      owner: "Frutos González Israel Oswaldo",
+      logo: "/Bancos/Pichincha.png",
+      color: "from-yellow-400 to-yellow-600",
+    },
+    {
+      name: "Banco de Guayaquil",
+      type: "Cuenta Ahorros",
+      account: "12588203",
+      owner: "Frutos González Israel Oswaldo",
+      logo: "/Bancos/Guayaquil.png",
+      color: "from-pink-500 to-red-600",
+    },
+    {
+      name: "Banco de Guayaquil",
+      type: "Cuenta Corriente",
+      account: "25032110",
+      owner: "CASTNET S.A.S",
+      id: "0993384453001",
+      logo: "/Bancos/Guayaquil.png",
+      color: "from-pink-500 to-red-600",
+    },
+    {
       name: "Banco del Pacífico",
       type: "Cuenta Ahorros",
       account: "1062703064",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
+      owner: "Frutos González Israel Oswaldo",
       logo: "/Bancos/Pacifico.png",
       color: "from-blue-500 to-blue-700",
     },
     {
       name: "Produbanco",
-      type: "Cuenta Ahorros",
-      account: "20059786629",
-      owner: "Israel Frutos Burgos",
-      id: "xxxxxxxx",
+      type: "Cuenta Corriente",
+      account: "02006198410",
+      owner: "CASTNET S.A.S",
       logo: "/Bancos/Produbanco.png",
       color: "from-green-600 to-emerald-800",
     },
@@ -390,7 +443,7 @@ const Plans = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header con diseño mejorado */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -413,7 +466,7 @@ const Plans = () => {
           </p>
         </motion.div>
 
-        {/* Grid de Planes con imágenes */}
+        {/* Grid de Planes */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-20">
           {plans.map((plan, i) => (
             <motion.div
@@ -425,7 +478,6 @@ const Plans = () => {
               onMouseLeave={() => setHoveredPlan(null)}
               className={`relative group cursor-pointer ${plan.popular ? "lg:scale-105" : ""}`}
             >
-              {/* Tarjeta principal */}
               <div
                 className={`relative rounded-2xl overflow-hidden bg-white dark:bg-slate-800/50 backdrop-blur-sm transition-all duration-500 ${
                   hoveredPlan === i
@@ -433,7 +485,7 @@ const Plans = () => {
                     : "shadow-xl"
                 }`}
               >
-                {/* Imagen de fondo - Ahora clickeable */}
+                {/* Imagen clickeable */}
                 <div
                   className="relative h-48 overflow-hidden cursor-pointer group/image"
                   onClick={() => handleImageClick(plan.image, plan.name)}
@@ -448,7 +500,7 @@ const Plans = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                  {/* Overlay de zoom */}
+                  {/* Overlay zoom */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="bg-white/90 dark:bg-slate-800/90 rounded-full p-2">
                       <svg
@@ -467,14 +519,12 @@ const Plans = () => {
                     </div>
                   </div>
 
-                  {/* Tag flotante */}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-bold rounded-full">
                       {plan.tag}
                     </span>
                   </div>
 
-                  {/* Icono flotante */}
                   <div className="absolute bottom-4 right-4 text-4xl filter drop-shadow-lg">
                     {plan.icon}
                   </div>
@@ -503,13 +553,34 @@ const Plans = () => {
                     </span>
                   </div>
 
-                  <div className="mb-4 text-center">
+                  {/* Bloque de precios: base + impuestos → precio final */}
+                  <div className="mb-4 text-center bg-slate-50 dark:bg-slate-700/40 rounded-xl p-3">
+                    {/* Precio base con impuestos */}
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <span className="text-base font-mono font-semibold text-slate-500 dark:text-slate-400 line-through decoration-red-400">
+                        ${plan.basePrice}
+                      </span>
+                      <span className="text-[10px] font-bold text-orange-500 dark:text-orange-400 bg-orange-500/10 px-1.5 py-0.5 rounded-full">
+                        +imp
+                      </span>
+                    </div>
+
+                    {/* Separador con flecha */}
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <div className="h-px flex-1 bg-gradient-to-r from-transparent to-emerald-300 dark:to-emerald-700" />
+                      <span className="text-emerald-500 text-xs font-bold">
+                        precio final
+                      </span>
+                      <div className="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-300 dark:to-emerald-700" />
+                    </div>
+
+                    {/* Precio final */}
                     <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                      <span className="text-2xl font-black text-slate-900 dark:text-white">
                         ${plan.finalPrice}
                       </span>
-                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                        Precio final
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                        /mes
                       </span>
                     </div>
                   </div>
@@ -540,7 +611,7 @@ const Plans = () => {
 
                   <button
                     onClick={handleWhatsApp}
-                    className="w-full py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:shadow-xl hover:scale-105 transform transition-all duration-300 relative overflow-hidden group/btn"
+                    className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:shadow-xl hover:scale-105 transform transition-all duration-300 relative overflow-hidden group/btn"
                   >
                     <span className="relative z-10">Contratar Ahora</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
@@ -548,7 +619,6 @@ const Plans = () => {
                 </div>
               </div>
 
-              {/* Efecto de brillo */}
               {plan.popular && (
                 <div className="absolute -inset-px bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
               )}
@@ -634,7 +704,7 @@ const Plans = () => {
             </div>
           </motion.div>
 
-          {/* Métodos de Pago - CORREGIDO SEGÚN IMAGEN */}
+          {/* Métodos de Pago */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -675,15 +745,14 @@ const Plans = () => {
                       className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/10 hover:border-emerald-500 cursor-pointer transition-all"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-lg bg-white p-1 shadow-sm flex items-center justify-center">
-                          {/* Logo real del banco en la lista */}
+                        <div className="w-12 h-12 rounded-lg bg-white p-1 shadow-sm flex items-center justify-center flex-shrink-0">
                           <img
                             src={bank.logo}
                             alt={bank.name}
                             className="w-full h-full object-contain"
                           />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-slate-900 dark:text-white text-sm">
                             {bank.name}
                           </h4>
@@ -693,7 +762,23 @@ const Plans = () => {
                           <p className="text-[10px] text-slate-500 uppercase font-bold">
                             {bank.type}
                           </p>
+                          <p className="text-[11px] text-slate-600 dark:text-slate-400 truncate">
+                            {bank.owner}
+                          </p>
                         </div>
+                        <svg
+                          className="w-4 h-4 text-slate-400 flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </div>
                     </motion.div>
                   ))}
