@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Plans from "./components/Plans";
+import Catalogo from "./components/Catalogo";
 import Documents from "./components/Documents";
 import Support from "./components/Support";
 import Contact from "./components/Contact";
@@ -25,6 +26,7 @@ function App() {
                 <Hero />
                 <About />
                 <Plans />
+                <Catalogo />
                 <Support />
                 <Contact />
               </>
@@ -32,6 +34,7 @@ function App() {
           />
           <Route path="/sobre-nosotros" element={<About />} />
           <Route path="/planes" element={<Plans />} />
+          <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/documentos" element={<Documents />} />
           <Route path="/contacto" element={<Contact />} />
           <Route
