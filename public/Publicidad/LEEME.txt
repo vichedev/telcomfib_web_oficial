@@ -1,0 +1,19 @@
+CARPETA DE PUBLICIDAD — Telcomfib
+==================================
+
+Pon aquí tus imágenes de anuncios, promociones y flyers (JPG, PNG o WEBP).
+
+Luego agrégalas al carrusel editando el array `slides` en:
+  src/components/Catalogo.jsx
+
+Ejemplo de una diapositiva:
+  {
+    src: "/Publicidad/mi-flyer.jpg",   // la ruta empieza en /Publicidad/
+    alt: "Promo Diciembre",
+    titulo: "¡Promo de Fin de Año!",   // opcional (se muestra encima)
+    subtitulo: "Instalación gratis",    // opcional
+    link: "https://wa.me/593986083855", // opcional (al hacer clic)
+  }
+
+Recomendado: imágenes de buena calidad. Cualquier proporción funciona
+(vertical tipo flyer u horizontal tipo banner) — se ajustan solas.
