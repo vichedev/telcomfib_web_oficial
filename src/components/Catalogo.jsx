@@ -19,7 +19,7 @@ const WHATSAPP =
 /* 🔧 TUS ANUNCIOS — agrega/edita aquí. (Pon las imágenes en public/Publicidad/) */
 const slides = [
   {
-    src: "/Publicidad/flyer-internet.jpg",
+    src: "/Publicidad/flyer-internet.png",
     alt: "Planes de Internet 100% Fibra Óptica",
     titulo: "100% Fibra Óptica",
     subtitulo: "Planes desde $20.75 · Instalación gratis",
