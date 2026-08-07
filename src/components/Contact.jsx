@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import MapaCobertura from "./MapaCobertura";
 
 const Contact = () => {
   const [copiedEmail, setCopiedEmail] = useState(null);
@@ -367,30 +368,8 @@ const Contact = () => {
             whileInView={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
-            {/* Mapa */}
-            <div className="relative bg-white dark:bg-slate-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-200/50 dark:border-white/10 shadow-lg hover:shadow-2xl transition-all duration-300">
-              <div className="p-5 border-b border-slate-200/50 dark:border-white/10">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  Ubicación
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Encuéntranos en Guayaquil
-                </p>
-              </div>
-              <div className="h-64 bg-slate-200 dark:bg-slate-700 relative">
-                <iframe
-                  title="Ubicación Telcomfib"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3986.987271129064!2d-79.911059!3d-2.138682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902d13a2c5d0b6b1%3A0x5b0c8f3e2c6d5e4f!2sNueva%20Prosperina%2C%20Guayaquil!5e0!3m2!1ses!2sec!4v1700000000000!5m2!1ses!2sec"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale hover:grayscale-0 transition-all duration-500"
-                />
-              </div>
-            </div>
+            {/* Mapa interactivo de cobertura */}
+            <MapaCobertura />
 
             {/* Tarjeta de WhatsApp - Contacto Directo */}
             <div className="relative bg-gradient-to-br from-emerald-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl p-6 border border-emerald-500/20 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">

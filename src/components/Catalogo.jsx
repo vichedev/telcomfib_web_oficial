@@ -12,6 +12,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
+import Galeria from "./Galeria";
 
 const WHATSAPP =
   "https://wa.me/593986083855?text=Hola,%20vi%20su%20publicidad%20y%20quiero%20más%20información";
@@ -344,6 +345,9 @@ const Catalogo = () => {
             ))}
           </div>
         )}
+
+        {/* ═══ GALERÍA DINÁMICA ═══ */}
+        <Galeria />
       </div>
 
       {/* ═══ LIGHTBOX (pantalla completa) ═══ */}

@@ -315,6 +315,11 @@ const Footer = () => {
                   name: "Tarifario y Promociones",
                   url: "/tarifario-y-promociones",
                 },
+                {
+                  name: "Consumo Internacional",
+                  url: "/consumo-internacional",
+                  live: true,
+                },
                 { name: "Contacto", url: "/contacto" },
               ].map((item, index) => (
                 <li key={index}>
@@ -324,6 +329,12 @@ const Footer = () => {
                   >
                     <div className="w-1 h-1 rounded-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <span className="text-sm">{item.name}</span>
+                    {item.live && (
+                      <span
+                        className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+                        title="Datos actualizados a diario"
+                      />
+                    )}
                   </Link>
                 </li>
               ))}

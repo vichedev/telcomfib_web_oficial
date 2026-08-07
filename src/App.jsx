@@ -9,6 +9,7 @@ import Support from "./components/Support";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ParametrosCalidad from "./components/Parametroscalidad";
+import ConsumoInternacional from "./components/ConsumoInternacional";
 import TarifarioPromociones from "./components/Tarifariopromociones";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -40,6 +41,10 @@ function App() {
           <Route
             path="/parametros-de-calidad"
             element={<ParametrosCalidad />}
+          />
+          <Route
+            path="/consumo-internacional"
+            element={<ConsumoInternacional />}
           />
           <Route
             path="/tarifario-y-promociones"
