@@ -75,6 +75,9 @@ const Toggle = ({ checked, disabled, onChange, label }) => (
 const CookieConsent = () => {
   const [visible, setVisible] = useState(false);
   const [mostrarPanel, setMostrarPanel] = useState(false);
+  // true cuando el usuario ya había decidido y reabre el panel desde el footer:
+  // en ese caso puede cerrar sin volver a decidir.
+  const [esReapertura, setEsReapertura] = useState(false);
   const [preferencias, setPreferencias] = useState({
     necesarias: true,
     analiticas: false,
@@ -101,6 +104,7 @@ const CookieConsent = () => {
             marketing: actual.marketing,
           });
         }
+        setEsReapertura(Boolean(actual));
         setMostrarPanel(true);
         setVisible(true);
       }),
@@ -110,6 +114,7 @@ const CookieConsent = () => {
   const cerrar = () => {
     setVisible(false);
     setMostrarPanel(false);
+    setEsReapertura(false);
   };
 
   const aceptarTodas = () => {
@@ -153,6 +158,7 @@ const CookieConsent = () => {
             exit={{ opacity: 0, y: 80 }}
             transition={{ type: "spring", damping: 24, stiffness: 220 }}
             role="dialog"
+            data-testid="cookie-banner"
             aria-modal={mostrarPanel ? "true" : "false"}
             aria-labelledby="cookie-consent-titulo"
             className="fixed inset-x-0 bottom-0 z-[1001] p-3 sm:p-4 md:p-6"
@@ -203,11 +209,20 @@ const CookieConsent = () => {
                       </p>
                     </div>
 
-                    {mostrarPanel && (
+                    {/* Solo se puede cerrar sin decidir si ya había una
+                        decisión previa (reapertura desde el footer) */}
+                    {(esReapertura || mostrarPanel) && (
                       <button
                         type="button"
-                        onClick={() => setMostrarPanel(false)}
-                        aria-label="Volver al aviso de cookies"
+                        data-testid="cookie-cerrar"
+                        onClick={() =>
+                          esReapertura ? cerrar() : setMostrarPanel(false)
+                        }
+                        aria-label={
+                          esReapertura
+                            ? "Cerrar preferencias de cookies"
+                            : "Volver al aviso de cookies"
+                        }
                         className="shrink-0 rounded-lg p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                       >
                         <FaTimes className="w-4 h-4" />
@@ -284,6 +299,7 @@ const CookieConsent = () => {
                         <button
                           type="button"
                           onClick={guardarSeleccion}
+                          data-testid="cookie-guardar"
                           className="order-2 sm:order-1 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           <FaCheck className="w-3.5 h-3.5" />
@@ -292,6 +308,7 @@ const CookieConsent = () => {
                         <button
                           type="button"
                           onClick={aceptarTodas}
+                          data-testid="cookie-aceptar"
                           className="order-1 sm:order-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
                         >
                           <FaShieldAlt className="w-3.5 h-3.5" />
@@ -303,6 +320,7 @@ const CookieConsent = () => {
                         <button
                           type="button"
                           onClick={() => setMostrarPanel(true)}
+                          data-testid="cookie-personalizar"
                           className="order-3 sm:order-1 inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           <FaSlidersH className="w-3.5 h-3.5" />
@@ -311,6 +329,7 @@ const CookieConsent = () => {
                         <button
                           type="button"
                           onClick={rechazarNoEsenciales}
+                          data-testid="cookie-rechazar"
                           className="order-2 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           Rechazar no esenciales
@@ -318,6 +337,7 @@ const CookieConsent = () => {
                         <button
                           type="button"
                           onClick={aceptarTodas}
+                          data-testid="cookie-aceptar"
                           className="order-1 sm:order-3 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
                         >
                           <FaShieldAlt className="w-3.5 h-3.5" />
