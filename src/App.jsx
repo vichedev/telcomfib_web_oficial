@@ -12,6 +12,8 @@ import ParametrosCalidad from "./components/Parametroscalidad";
 import ConsumoInternacional from "./components/ConsumoInternacional";
 import TarifarioPromociones from "./components/Tarifariopromociones";
 import ScrollToTop from "./components/ScrollToTop";
+import PoliticaCookies from "./components/PoliticaCookies";
+import CookieConsent from "./components/CookieConsent";
 
 function App() {
   return (
@@ -50,8 +52,10 @@ function App() {
             path="/tarifario-y-promociones"
             element={<TarifarioPromociones />}
           />
+          <Route path="/politica-de-cookies" element={<PoliticaCookies />} />
         </Routes>
         <Footer />
+        <CookieConsent />
       </div>
     </Router>
   );

@@ -17,7 +17,9 @@ import {
   FaMapMarkerAlt,
   FaClock,
   FaPhoneAlt,
+  FaCookieBite,
 } from "react-icons/fa";
+import { openCookiePreferences } from "../utils/cookieConsent";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -400,6 +402,22 @@ const Footer = () => {
             >
               Política de Privacidad
             </Link>
+            <span className="text-slate-600">•</span>
+            <Link
+              to="/politica-de-cookies"
+              className="text-slate-400 hover:text-emerald-400 transition-colors"
+            >
+              Política de Cookies
+            </Link>
+            <span className="text-slate-600">•</span>
+            <button
+              type="button"
+              onClick={openCookiePreferences}
+              className="flex items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition-colors"
+            >
+              <FaCookieBite className="w-3.5 h-3.5" />
+              Configurar cookies
+            </button>
           </div>
 
           <div className="flex items-center justify-center gap-4 text-xs text-slate-500">
